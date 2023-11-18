@@ -71,6 +71,8 @@ pip install -r requirements.txt
 
 To set up your environment variables, you'll need to create a `.env` file in the root directory of the project. If you already have a `.env.example` file, you can simply copy with rename it to `.env` using the command `cp .env.example .env`. Once you've done this, add or/and fill the following lines by values in your `.env` file:
 
+- `HH_MAX_PAGES`: the maximum number of pages to parse from HeadHunter. Default is `1`, which limits to one page. Set to `0` for unlimited pages or a specific number to limit the pages accordingly. This parameter is used to prevent heavy load on the script during data retrieval.
+- `HH_TIMEOUT`: the time in seconds to wait between each request to the HeadHunter API to avoid triggering the captcha. The default value is `1`.
 - `SJ_SECRET_KEY`: this key serves as your unique identifier for accessing the SuperJob API. It enables the retrieval of job vacancy data from the SuperJob platform. To obtain your personal API key, register at the [official SuperJob website](https://api.superjob.ru/register). This key is essential for authenticating your requests to the SuperJob API and accessing detailed vacancy information.
 
 Please ensure that each environment variable is assigned the correct value.
