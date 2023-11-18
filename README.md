@@ -15,18 +15,20 @@
 
 ## Overview
 
-**Code Job Finder** is a powerful tool designed to aggregate programming job vacancies from major Russian job platforms, HeadHunter and SuperJob. It allows users to retrieve and analyze job market data, focusing on the demand for various programming languages in Moscow. The application provides insightful statistics such as the number of vacancies found, vacancies processed, and the average salary offered, thus offering a comprehensive view of the current job market for programmers.
+**Code Job Finder** is a dynamic tool designed for analyzing programming job vacancies from major Russian job platforms, HeadHunter and SuperJob. Enhanced with features to control the parsing depth and request frequency, it provides a more efficient and reliable data collection process. This tool is specifically tailored for job market research in Moscow, delivering insights into various programming languages' demand, vacancies availability, and salary trends. It's an invaluable resource for both job seekers and market analysts looking to understand the programming job landscape.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Features
 
-- **Vacancy Data Aggregation:** gathers information about programming job vacancies from HeadHunter and SuperJob APIs.
-- **Support for Multiple Programming Languages:** tracks job vacancies for popular programming languages like Python, JavaScript, Java, PHP, C++, C#, TypeScript, Kotlin, Go, and Swift.
-- **Analytical Insights:** offers detailed analysis including the number of vacancies found, processed, and average salaries for each programming language.
-- **User-Friendly Data Presentation:** utilizes the AsciiTable library to present data in an easy-to-read table format.
-- **Environment Variable Configuration:** uses environment variables such as `SJ_SECRET_KEY` for secure API interactions.
-- **Simple Installation and Usage:** easy to set up and use, requiring only basic Python knowledge and environment setup.
+- **Comprehensive Vacancy Data Retrieval:** gathers detailed information about programming job vacancies from HeadHunter and SuperJob.
+- **Support for Popular Programming Languages:** includes data for languages like Python, JavaScript, Java, and others.
+- **Page Control for API Requests:** users can set the maximum number of pages to parse from HeadHunter via an environment variable, optimizing performance and avoiding potential rate limits.
+- **Request Throttling to Prevent Captcha:** implements a timeout feature to manage the frequency of API requests, ensuring the script does not trigger anti-bot mechanisms like captchas.
+- **Analytical Insights:** provides statistics such as the number of vacancies, processed entries, and average salary calculations.
+- **Flexible Configuration:** utilizes environment variables for settings like API keys and parsing parameters, facilitating easy customization.
+- **AsciiTable for Readable Output:** displays data in a user-friendly table format using the AsciiTable library.
+- **Salary Estimation Logic:** employs clear and adjustable salary calculation methods, avoiding 'magic numbers' and enhancing code readability.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
