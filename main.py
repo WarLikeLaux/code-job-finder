@@ -22,8 +22,14 @@ LANGUAGES = [
 
 def main():
     load_dotenv()
-    hh_vacancies_info = hh_api_helpers.get_langs_vacancies_info(LANGUAGES)
-    table_data = [
+    hh_max_pages = int(os.environ["HH_MAX_PAGES"])
+    hh_timeout = int(os.environ["HH_TIMEOUT"])
+    hh_vacancies_info = hh_api_helpers.get_langs_vacancies_info(
+        LANGUAGES,
+        hh_max_pages,
+        hh_timeout
+    )
+    hh_table_data = [
         [
             'Язык программирования',
             'Вакансий найдено',
@@ -38,16 +44,16 @@ def main():
             str(info['vacancies_processed']),
             str(info['average_salary'])
         ]
-        table_data.append(row)
-    table = AsciiTable(table_data, title="HeadHunter Moscow")
-    print(table.table)
+        hh_table_data.append(row)
+    hh_table = AsciiTable(hh_table_data, title="HeadHunter Moscow")
+    print(hh_table.table)
 
     sj_secret_key = os.environ["SJ_SECRET_KEY"]
     sj_vacancies_info = sj_api_helpers.get_langs_vacancies_info(
         sj_secret_key,
         LANGUAGES
     )
-    table_data = [
+    sj_table_data = [
         [
             "Язык программирования",
             "Вакансий найдено",
@@ -62,9 +68,9 @@ def main():
             str(info["vacancies_processed"]),
             str(info["average_salary"]),
         ]
-        table_data.append(row)
-    table = AsciiTable(table_data, title="SuperJob Moscow")
-    print(table.table)
+        sj_table_data.append(row)
+    sj_table = AsciiTable(sj_table_data, title="SuperJob Moscow")
+    print(sj_table.table)
 
 
 if __name__ == "__main__":

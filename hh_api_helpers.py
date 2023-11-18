@@ -4,22 +4,24 @@ from itertools import count
 import requests
 
 HH_BASE_URL = "https://api.hh.ru"
+SALARY_LOWER_BOUND_MULTIPLIER = 0.8
+SALARY_UPPER_BOUND_MULTIPLIER = 1.2
 
 
 def predict_rub_salary(vacancy):
     if vacancy["salary"]["currency"] != "RUR":
         return None
     if not vacancy["salary"]["from"]:
-        return vacancy["salary"]["to"] * 0.8
+        return vacancy["salary"]["to"] * SALARY_LOWER_BOUND_MULTIPLIER
     if not vacancy["salary"]["to"]:
-        return vacancy["salary"]["from"] * 1.2
+        return vacancy["salary"]["from"] * SALARY_UPPER_BOUND_MULTIPLIER
     return (vacancy["salary"]["to"] + vacancy["salary"]["from"]) / 2
 
 
-def get_langs_vacancies_info(languages):
+def get_langs_vacancies_info(languages, hh_max_pages, hh_timeout):
     langs_info = {}
     for lang in languages:
-        lang_vacancies = get_lang_vacancies(lang)
+        lang_vacancies = get_lang_vacancies(lang, hh_max_pages, hh_timeout)
         vacancies_salaries = get_vacancies_average_salary(lang_vacancies)
         langs_info[lang] = {
             "vacancies_found": get_lang_vacancies_count(lang),
@@ -39,8 +41,10 @@ def get_lang_vacancies_count(lang):
     return r.json().get('found', 0)
 
 
-def get_lang_vacancies(lang="python"):
+def get_lang_vacancies(lang="python", max_pages=1, timeout=1):
     for page in count():
+        if max_pages != 0 and page >= max_pages:
+            break
         params = {
             "text": f"программист {lang}",
             "only_with_salary": "true",
@@ -51,12 +55,10 @@ def get_lang_vacancies(lang="python"):
         page_response.raise_for_status()
         page_payload = page_response.json()
 
-        time.sleep(1)
+        time.sleep(timeout)
 
         yield from page_payload['items']
 
-        if page > 0:
-            break
         if page + 1 >= page_payload['pages']:
             break
 
