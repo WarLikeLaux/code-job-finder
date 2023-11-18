@@ -3,6 +3,8 @@ from itertools import count
 import requests
 
 SJ_BASE_URL = "https://api.superjob.ru/2.0"
+SALARY_LOWER_BOUND_MULTIPLIER = 0.8
+SALARY_UPPER_BOUND_MULTIPLIER = 1.2
 
 
 def get_lang_vacancies(sj_secret_key, lang):
@@ -36,9 +38,9 @@ def predict_rub_salary(vacancy):
     if vacancy["currency"] != "rub":
         return None
     if not vacancy["payment_from"]:
-        return vacancy["payment_to"] * 0.8
+        return vacancy["payment_to"] * SALARY_LOWER_BOUND_MULTIPLIER
     if not vacancy["payment_to"]:
-        return vacancy["payment_from"] * 1.2
+        return vacancy["payment_from"] * SALARY_UPPER_BOUND_MULTIPLIER
     return (vacancy["payment_to"] + vacancy["payment_from"]) / 2
 
 
