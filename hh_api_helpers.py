@@ -6,19 +6,6 @@ import requests
 HH_BASE_URL = "https://api.hh.ru"
 
 
-def get_langs_vacancies(languages):
-    langs_vacancies = {}
-    for language in languages:
-        params = {
-            "text": f"Программист {language}",
-            "period": 30,
-        }
-        r = requests.get(f"{HH_BASE_URL}/vacancies", params=params)
-        count = r.json().get('found', 0)
-        langs_vacancies[language] = count
-    return langs_vacancies
-
-
 def predict_rub_salary(vacancy):
     if vacancy["salary"]["currency"] != "RUR":
         return None
