@@ -32,7 +32,10 @@ def get_lang_vacancies(sj_secret_key, lang):
             headers=headers
         )
 
-        yield from vacancies_response.json()['objects']
+        yield from (
+            vacancies_response.json()['objects'],
+            vacancies_response.json().get('total', 0),
+        )
 
         if not vacancies_response.json()['more']:
             break
@@ -51,34 +54,17 @@ def predict_rub_salary(vacancy):
 def get_langs_vacancies_stats(sj_secret_key, languages):
     langs_stats = {}
     for lang in languages:
-        lang_vacancies = get_lang_vacancies(sj_secret_key, lang)
+        lang_vacancies, lang_vacancies_count = get_lang_vacancies(
+            sj_secret_key,
+            lang
+        )
         vacancies_salaries = get_vacancies_average_salary(lang_vacancies)
         langs_stats[lang] = {
-            "vacancies_found": get_lang_vacancies_count(sj_secret_key, lang),
+            "vacancies_found": lang_vacancies_count,
             "vacancies_processed": vacancies_salaries[0],
             "average_salary": vacancies_salaries[1],
         }
     return langs_stats
-
-
-def get_lang_vacancies_count(sj_secret_key, lang):
-    params = {
-            "t": MOSCOW_ID,
-            'keywords[0][keys]': f"{lang}",
-            'keywords[0][srws]': SEARCH_IN_TITLE,
-            'keywords[1][keys]': "разработчик программист developer",
-            'keywords[1][skwc]': 'or',
-            'keywords[1][srws]': SEARCH_EVERYWHERE,
-    }
-    headers = {
-        "X-Api-App-Id": sj_secret_key,
-    }
-    vacancies_response = requests.get(
-        f"{SJ_BASE_URL}/vacancies",
-        params=params,
-        headers=headers
-    )
-    return vacancies_response.json().get('total', 0)
 
 
 def get_vacancies_average_salary(vacancies):
