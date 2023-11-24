@@ -22,15 +22,15 @@ def get_lang_vacancies(sj_secret_key, lang):
         headers = {
             "X-Api-App-Id": sj_secret_key,
         }
-        r = requests.get(
+        vacancies_response = requests.get(
             f"{SJ_BASE_URL}/vacancies",
             params=params,
             headers=headers
         )
 
-        yield from r.json()['objects']
+        yield from vacancies_response.json()['objects']
 
-        if not r.json()['more']:
+        if not vacancies_response.json()['more']:
             break
 
 
@@ -69,21 +69,21 @@ def get_lang_vacancies_count(sj_secret_key, lang):
     headers = {
         "X-Api-App-Id": sj_secret_key,
     }
-    r = requests.get(
+    vacancies_response = requests.get(
         f"{SJ_BASE_URL}/vacancies",
         params=params,
         headers=headers
     )
-    return r.json().get('total', 0)
+    return vacancies_response.json().get('total', 0)
 
 
 def get_vacancies_average_salary(vacancies):
     count = 0
-    salary = 0
+    total_salary = 0
     for vacancy in vacancies:
         if not predict_rub_salary(vacancy):
             continue
-        salary += predict_rub_salary(vacancy)
+        total_salary += predict_rub_salary(vacancy)
         count += 1
-    avg_salary = 0 if count == 0 else int(salary / count)
+    avg_salary = 0 if count == 0 else int(total_salary / count)
     return count, avg_salary
