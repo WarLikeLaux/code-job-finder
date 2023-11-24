@@ -3,20 +3,10 @@ from itertools import count
 
 import requests
 
+import salary_helpers
+
 HH_BASE_URL = "https://api.hh.ru"
 HH_SEARCH_PERIOD_DAYS = 30
-SALARY_LOWER_BOUND_MULTIPLIER = 0.8
-SALARY_UPPER_BOUND_MULTIPLIER = 1.2
-
-
-def predict_rub_salary(vacancy):
-    if vacancy["salary"]["currency"] != "RUR":
-        return None
-    if not vacancy["salary"]["from"]:
-        return vacancy["salary"]["to"] * SALARY_LOWER_BOUND_MULTIPLIER
-    if not vacancy["salary"]["to"]:
-        return vacancy["salary"]["from"] * SALARY_UPPER_BOUND_MULTIPLIER
-    return (vacancy["salary"]["to"] + vacancy["salary"]["from"]) / 2
 
 
 def get_langs_vacancies_stats(languages, hh_max_pages, hh_timeout):
@@ -62,7 +52,11 @@ def get_vacancies_average_salary(vacancies):
     count = 0
     total_salary = 0
     for vacancy in vacancies:
-        predicted_salary = predict_rub_salary(vacancy)
+        predicted_salary = salary_helpers.predict_rub_salary(
+            currency=vacancy["salary"]["currency"],
+            salary_from=vacancy["salary"]["from"],
+            salary_to=vacancy["salary"]["to"],
+        )
         if not predicted_salary:
             continue
         total_salary += predicted_salary

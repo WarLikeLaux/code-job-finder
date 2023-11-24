@@ -2,13 +2,13 @@ from itertools import count
 
 import requests
 
+import salary_helpers
+
 SJ_BASE_URL = "https://api.superjob.ru/2.0"
 MOSCOW_ID = 4
 SEARCH_IN_TITLE = 1
 SEARCH_EVERYWHERE = 10
 MAX_VACANCIES_PER_REQUEST = 100
-SALARY_LOWER_BOUND_MULTIPLIER = 0.8
-SALARY_UPPER_BOUND_MULTIPLIER = 1.2
 
 
 def get_lang_vacancies(sj_secret_key, lang):
@@ -41,16 +41,6 @@ def get_lang_vacancies(sj_secret_key, lang):
             break
 
 
-def predict_rub_salary(vacancy):
-    if vacancy["currency"] != "rub":
-        return None
-    if not vacancy["payment_from"]:
-        return vacancy["payment_to"] * SALARY_LOWER_BOUND_MULTIPLIER
-    if not vacancy["payment_to"]:
-        return vacancy["payment_from"] * SALARY_UPPER_BOUND_MULTIPLIER
-    return (vacancy["payment_to"] + vacancy["payment_from"]) / 2
-
-
 def get_langs_vacancies_stats(sj_secret_key, languages):
     langs_stats = {}
     for lang in languages:
@@ -71,7 +61,11 @@ def get_vacancies_average_salary(vacancies):
     count = 0
     total_salary = 0
     for vacancy in vacancies:
-        predicted_salary = predict_rub_salary(vacancy)
+        predicted_salary = salary_helpers.predict_rub_salary(
+            currency=vacancy["currency"],
+            salary_from=vacancy["payment_from"],
+            salary_to=vacancy["payment_to"],
+        )
         if not predicted_salary:
             continue
         total_salary += predicted_salary
