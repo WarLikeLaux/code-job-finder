@@ -32,7 +32,6 @@ def get_lang_vacancies(lang="python", max_pages=1, timeout=1):
             break
         params = {
             "text": f"программист {lang}",
-            "only_with_salary": "true",
             "period": HH_SEARCH_PERIOD_DAYS,
             'page': page
         }
@@ -52,10 +51,13 @@ def get_vacancies_average_salary(vacancies):
     count = 0
     total_salary = 0
     for vacancy in vacancies:
+        vacancy_salary = vacancy["salary"]
+        if not vacancy_salary:
+            continue
         predicted_salary = salary_helpers.predict_rub_salary(
-            currency=vacancy["salary"]["currency"],
-            salary_from=vacancy["salary"]["from"],
-            salary_to=vacancy["salary"]["to"],
+            currency=vacancy_salary["currency"],
+            salary_from=vacancy_salary["from"],
+            salary_to=vacancy_salary["to"],
         )
         if not predicted_salary:
             continue
