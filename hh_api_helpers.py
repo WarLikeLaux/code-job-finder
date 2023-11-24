@@ -4,6 +4,7 @@ from itertools import count
 import requests
 
 HH_BASE_URL = "https://api.hh.ru"
+HH_SEARCH_PERIOD_DAYS = 30
 SALARY_LOWER_BOUND_MULTIPLIER = 0.8
 SALARY_UPPER_BOUND_MULTIPLIER = 1.2
 
@@ -35,7 +36,7 @@ def get_lang_vacancies_count(lang):
     params = {
         "text": f"Программист {lang}",
         "only_with_salary": "true",
-        "period": 30
+        "period": HH_SEARCH_PERIOD_DAYS
     }
     vacancies_response = requests.get(
         f"{HH_BASE_URL}/vacancies",
@@ -51,7 +52,7 @@ def get_lang_vacancies(lang="python", max_pages=1, timeout=1):
         params = {
             "text": f"программист {lang}",
             "only_with_salary": "true",
-            "period": 30,
+            "period": HH_SEARCH_PERIOD_DAYS,
             'page': page
         }
         page_response = requests.get(f"{HH_BASE_URL}/vacancies", params=params)

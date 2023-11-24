@@ -3,6 +3,10 @@ from itertools import count
 import requests
 
 SJ_BASE_URL = "https://api.superjob.ru/2.0"
+MOSCOW_ID = 4
+SEARCH_EVERYWHERE = 10
+SEARCH_IN_TITLE = 1
+MAX_VACANCIES_PER_REQUEST = 100
 SALARY_LOWER_BOUND_MULTIPLIER = 0.8
 SALARY_UPPER_BOUND_MULTIPLIER = 1.2
 
@@ -10,13 +14,13 @@ SALARY_UPPER_BOUND_MULTIPLIER = 1.2
 def get_lang_vacancies(sj_secret_key, lang):
     for page in count():
         params = {
-            "t": 4,
+            "t": MOSCOW_ID,
             'keywords[0][keys]': f"{lang}",
-            'keywords[0][srws]': 1,
+            'keywords[0][srws]': SEARCH_IN_TITLE,
             'keywords[1][keys]': "разработчик программист developer",
             'keywords[1][skwc]': 'or',
-            'keywords[1][srws]': 10,
-            "count": 100,
+            'keywords[1][srws]': SEARCH_EVERYWHERE,
+            "count": MAX_VACANCIES_PER_REQUEST,
             "page": page,
         }
         headers = {
@@ -59,12 +63,13 @@ def get_langs_vacancies_stats(sj_secret_key, languages):
 
 def get_lang_vacancies_count(sj_secret_key, lang):
     params = {
-        "t": 4,
-        'keywords[0][keys]': f"{lang}",
-        'keywords[0][srws]': 1,
-        'keywords[1][keys]': "разработчик программист developer",
-        'keywords[1][skwc]': 'or',
-        'keywords[1][srws]': 10,
+            "t": MOSCOW_ID,
+            'keywords[0][keys]': f"{lang}",
+            'keywords[0][srws]': SEARCH_IN_TITLE,
+            'keywords[1][keys]': "разработчик программист developer",
+            'keywords[1][skwc]': 'or',
+            'keywords[1][srws]': SEARCH_EVERYWHERE,
+            "count": MAX_VACANCIES_PER_REQUEST,
     }
     headers = {
         "X-Api-App-Id": sj_secret_key,
