@@ -32,12 +32,14 @@ def get_lang_vacancies(sj_secret_key, lang):
             headers=headers
         )
 
+        vacancies_json = vacancies_response.json()
+
         yield from (
-            vacancies_response.json()['objects'],
-            vacancies_response.json().get('total', 0),
+            vacancies_json['objects'],
+            vacancies_json.get('total', 0),
         )
 
-        if not vacancies_response.json()['more']:
+        if not vacancies_json['more']:
             break
 
 
