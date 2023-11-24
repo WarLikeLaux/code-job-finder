@@ -40,9 +40,9 @@ def main():
     for lang, info in hh_vacancies_info.items():
         row = [
             lang,
-            str(info['vacancies_found']),
-            str(info['vacancies_processed']),
-            str(info['average_salary'])
+            info['vacancies_found'],
+            info['vacancies_processed'],
+            info['average_salary']
         ]
         hh_table_data.append(row)
     hh_table = AsciiTable(hh_table_data, title="HeadHunter Moscow")
@@ -64,9 +64,9 @@ def main():
     for lang, info in sj_vacancies_info.items():
         row = [
             lang,
-            str(info["vacancies_found"]),
-            str(info["vacancies_processed"]),
-            str(info["average_salary"]),
+            info["vacancies_found"],
+            info["vacancies_processed"],
+            info["average_salary"],
         ]
         sj_table_data.append(row)
     sj_table = AsciiTable(sj_table_data, title="SuperJob Moscow")
