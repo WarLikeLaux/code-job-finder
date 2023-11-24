@@ -4,8 +4,8 @@ import requests
 
 SJ_BASE_URL = "https://api.superjob.ru/2.0"
 MOSCOW_ID = 4
-SEARCH_EVERYWHERE = 10
 SEARCH_IN_TITLE = 1
+SEARCH_EVERYWHERE = 10
 MAX_VACANCIES_PER_REQUEST = 100
 SALARY_LOWER_BOUND_MULTIPLIER = 0.8
 SALARY_UPPER_BOUND_MULTIPLIER = 1.2
@@ -69,7 +69,6 @@ def get_lang_vacancies_count(sj_secret_key, lang):
             'keywords[1][keys]': "разработчик программист developer",
             'keywords[1][skwc]': 'or',
             'keywords[1][srws]': SEARCH_EVERYWHERE,
-            "count": MAX_VACANCIES_PER_REQUEST,
     }
     headers = {
         "X-Api-App-Id": sj_secret_key,
