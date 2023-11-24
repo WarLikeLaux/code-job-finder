@@ -44,17 +44,17 @@ def predict_rub_salary(vacancy):
     return (vacancy["payment_to"] + vacancy["payment_from"]) / 2
 
 
-def get_langs_vacancies_info(sj_secret_key, languages):
-    langs_info = {}
+def get_langs_vacancies_stats(sj_secret_key, languages):
+    langs_stats = {}
     for lang in languages:
         lang_vacancies = get_lang_vacancies(sj_secret_key, lang)
         vacancies_salaries = get_vacancies_average_salary(lang_vacancies)
-        langs_info[lang] = {
+        langs_stats[lang] = {
             "vacancies_found": get_lang_vacancies_count(sj_secret_key, lang),
             "vacancies_processed": vacancies_salaries[0],
             "average_salary": vacancies_salaries[1],
         }
-    return langs_info
+    return langs_stats
 
 
 def get_lang_vacancies_count(sj_secret_key, lang):

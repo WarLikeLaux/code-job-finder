@@ -18,17 +18,17 @@ def predict_rub_salary(vacancy):
     return (vacancy["salary"]["to"] + vacancy["salary"]["from"]) / 2
 
 
-def get_langs_vacancies_info(languages, hh_max_pages, hh_timeout):
-    langs_info = {}
+def get_langs_vacancies_stats(languages, hh_max_pages, hh_timeout):
+    langs_stats = {}
     for lang in languages:
         lang_vacancies = get_lang_vacancies(lang, hh_max_pages, hh_timeout)
         vacancies_salaries = get_vacancies_average_salary(lang_vacancies)
-        langs_info[lang] = {
+        langs_stats[lang] = {
             "vacancies_found": get_lang_vacancies_count(lang),
             "vacancies_processed": vacancies_salaries[0],
             "average_salary": vacancies_salaries[1],
         }
-    return langs_info
+    return langs_stats
 
 
 def get_lang_vacancies_count(lang):

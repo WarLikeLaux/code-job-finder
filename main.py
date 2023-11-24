@@ -24,12 +24,12 @@ def main():
     load_dotenv()
     hh_max_pages = int(os.environ["HH_MAX_PAGES"])
     hh_timeout = int(os.environ["HH_TIMEOUT"])
-    hh_vacancies_info = hh_api_helpers.get_langs_vacancies_info(
+    hh_vacancies_stats = hh_api_helpers.get_langs_vacancies_stats(
         LANGUAGES,
         hh_max_pages,
         hh_timeout
     )
-    hh_table_data = [
+    hh_vacancies_table = [
         [
             'Язык программирования',
             'Вакансий найдено',
@@ -37,23 +37,26 @@ def main():
             'Средняя зарплата',
         ]
     ]
-    for lang, info in hh_vacancies_info.items():
+    for lang, stats in hh_vacancies_stats.items():
         row = [
             lang,
-            info['vacancies_found'],
-            info['vacancies_processed'],
-            info['average_salary']
+            stats['vacancies_found'],
+            stats['vacancies_processed'],
+            stats['average_salary']
         ]
-        hh_table_data.append(row)
-    hh_table = AsciiTable(hh_table_data, title="HeadHunter Moscow")
-    print(hh_table.table)
+        hh_vacancies_table.append(row)
+    hh_vacancies_table = AsciiTable(
+        hh_vacancies_table,
+        title="HeadHunter Moscow"
+    )
+    print(hh_vacancies_table.table)
 
     sj_secret_key = os.environ["SJ_SECRET_KEY"]
-    sj_vacancies_info = sj_api_helpers.get_langs_vacancies_info(
+    sj_vacancies_stats = sj_api_helpers.get_langs_vacancies_stats(
         sj_secret_key,
         LANGUAGES
     )
-    sj_table_data = [
+    sj_vacancies_table = [
         [
             "Язык программирования",
             "Вакансий найдено",
@@ -61,16 +64,19 @@ def main():
             "Средняя зарплата",
         ]
     ]
-    for lang, info in sj_vacancies_info.items():
+    for lang, stats in sj_vacancies_stats.items():
         row = [
             lang,
-            info["vacancies_found"],
-            info["vacancies_processed"],
-            info["average_salary"],
+            stats["vacancies_found"],
+            stats["vacancies_processed"],
+            stats["average_salary"],
         ]
-        sj_table_data.append(row)
-    sj_table = AsciiTable(sj_table_data, title="SuperJob Moscow")
-    print(sj_table.table)
+        sj_vacancies_table.append(row)
+    sj_vacancies_table = AsciiTable(
+        sj_vacancies_table,
+        title="SuperJob Moscow"
+    )
+    print(sj_vacancies_table.table)
 
 
 if __name__ == "__main__":
