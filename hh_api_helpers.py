@@ -25,8 +25,8 @@ def get_langs_vacancies_info(languages, hh_max_pages, hh_timeout):
         vacancies_salaries = get_vacancies_average_salary(lang_vacancies)
         langs_info[lang] = {
             "vacancies_found": get_lang_vacancies_count(lang),
-            "vacancies_processed": vacancies_salaries.get('count', 0),
-            "average_salary": vacancies_salaries.get('avg_salary', 0),
+            "vacancies_processed": vacancies_salaries[0],
+            "average_salary": vacancies_salaries[1],
         }
     return langs_info
 
@@ -72,7 +72,4 @@ def get_vacancies_average_salary(vacancies):
         salary += predict_rub_salary(vacancy)
         count += 1
     avg_salary = 0 if count == 0 else int(salary / count)
-    return {
-        "count": count,
-        "avg_salary": avg_salary
-    }
+    return count, avg_salary
