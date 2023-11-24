@@ -49,10 +49,11 @@ def get_langs_vacancies_stats(sj_secret_key, languages):
             lang
         )
         vacancies_salaries = get_vacancies_average_salary(lang_vacancies)
+        vacancies_processed, average_salary = vacancies_salaries
         langs_stats[lang] = {
             "vacancies_found": lang_vacancies_count,
-            "vacancies_processed": vacancies_salaries[0],
-            "average_salary": vacancies_salaries[1],
+            "vacancies_processed": vacancies_processed,
+            "average_salary": average_salary,
         }
     return langs_stats
 
