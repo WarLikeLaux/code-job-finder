@@ -46,7 +46,7 @@ def get_lang_vacancies_count(lang):
 
 def get_lang_vacancies(lang="python", max_pages=1, timeout=1):
     for page in count():
-        if max_pages != 0 and page >= max_pages:
+        if max_pages and page >= max_pages:
             break
         params = {
             "text": f"программист {lang}",
@@ -75,5 +75,5 @@ def get_vacancies_average_salary(vacancies):
             continue
         total_salary += predicted_salary
         count += 1
-    avg_salary = 0 if count == 0 else int(total_salary / count)
+    avg_salary = int(total_salary / count) if count else 0
     return count, avg_salary

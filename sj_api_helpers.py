@@ -86,5 +86,5 @@ def get_vacancies_average_salary(vacancies):
             continue
         total_salary += predicted_salary
         count += 1
-    avg_salary = 0 if count == 0 else int(total_salary / count)
+    avg_salary = int(total_salary / count) if count else 0
     return count, avg_salary
