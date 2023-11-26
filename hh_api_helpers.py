@@ -52,13 +52,13 @@ def get_lang_vacancies(lang, max_pages=1, timeout=1):
             break
 
 
-def get_vacancies_average_salary(vacancies_generator):
+def get_vacancies_average_salary(vacancies_items):
     total_count = 0
     processed_count = 0
     total_salary = 0
-    for vacancies_dict in vacancies_generator:
-        vacancies_list = vacancies_dict["vacancies"]
-        for vacancy in vacancies_list:
+    for vacancies_item in vacancies_items:
+        vacancies = vacancies_item["vacancies"]
+        for vacancy in vacancies:
             vacancy_salary = vacancy["salary"]
             if not vacancy_salary:
                 continue
@@ -73,6 +73,6 @@ def get_vacancies_average_salary(vacancies_generator):
             processed_count += 1
         if total_count:
             continue
-        total_count = vacancies_dict["count"]
+        total_count = vacancies_item["count"]
     avg_salary = int(total_salary / processed_count) if processed_count else 0
     return total_count, processed_count, avg_salary

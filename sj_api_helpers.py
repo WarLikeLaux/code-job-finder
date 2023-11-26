@@ -32,14 +32,14 @@ def get_lang_vacancies(sj_secret_key, lang):
             headers=headers
         )
 
-        vacancies_json = vacancies_response.json()
+        vacancies = vacancies_response.json()
 
         yield {
-            "vacancies": vacancies_json['objects'],
-            "count": vacancies_json.get('total', 0),
+            "vacancies": vacancies['objects'],
+            "count": vacancies.get('total', 0),
         }
 
-        if not vacancies_json['more']:
+        if not vacancies['more']:
             break
 
 
@@ -61,13 +61,13 @@ def get_langs_vacancies_stats(sj_secret_key, languages):
     return langs_stats
 
 
-def get_vacancies_average_salary(vacancies_generator):
+def get_vacancies_average_salary(vacancies_items):
     total_count = 0
     processed_count = 0
     total_salary = 0
-    for vacancies_dict in vacancies_generator:
-        vacancies_list = vacancies_dict["vacancies"]
-        for vacancy in vacancies_list:
+    for vacancies_item in vacancies_items:
+        vacancies = vacancies_item["vacancies"]
+        for vacancy in vacancies:
             predicted_salary = salary_helpers.predict_rub_salary(
                 currency=vacancy["currency"],
                 salary_from=vacancy["payment_from"],
@@ -79,6 +79,6 @@ def get_vacancies_average_salary(vacancies_generator):
             processed_count += 1
         if total_count:
             continue
-        total_count = vacancies_dict["count"]
+        total_count = vacancies_item["count"]
     avg_salary = int(total_salary / processed_count) if processed_count else 0
     return total_count, processed_count, avg_salary
