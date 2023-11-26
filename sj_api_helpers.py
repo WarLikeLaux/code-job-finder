@@ -34,10 +34,10 @@ def get_lang_vacancies(sj_secret_key, lang):
 
         vacancies_json = vacancies_response.json()
 
-        yield from (
-            vacancies_json['objects'],
-            vacancies_json.get('total', 0),
-        )
+        yield {
+            "vacancies": vacancies_json['objects'],
+            "count": vacancies_json.get('total', 0),
+        }
 
         if not vacancies_json['more']:
             break
@@ -46,32 +46,39 @@ def get_lang_vacancies(sj_secret_key, lang):
 def get_langs_vacancies_stats(sj_secret_key, languages):
     langs_stats = {}
     for lang in languages:
-        lang_vacancies, lang_vacancies_count = get_lang_vacancies(
+        lang_vacancies = get_lang_vacancies(
             sj_secret_key,
             lang
         )
-        vacancies_salaries = get_vacancies_average_salary(lang_vacancies)
-        vacancies_processed, average_salary = vacancies_salaries
+        vacancies_count, vacancies_processed, average_salary = (
+            get_vacancies_average_salary(lang_vacancies)
+        )
         langs_stats[lang] = {
-            "vacancies_found": lang_vacancies_count,
+            "vacancies_found": vacancies_count,
             "vacancies_processed": vacancies_processed,
             "average_salary": average_salary,
         }
     return langs_stats
 
 
-def get_vacancies_average_salary(vacancies):
-    count = 0
+def get_vacancies_average_salary(vacancies_generator):
+    total_count = 0
+    processed_count = 0
     total_salary = 0
-    for vacancy in vacancies:
-        predicted_salary = salary_helpers.predict_rub_salary(
-            currency=vacancy["currency"],
-            salary_from=vacancy["payment_from"],
-            salary_to=vacancy["payment_to"],
-        )
-        if not predicted_salary:
+    for vacancies_dict in vacancies_generator:
+        vacancies_list = vacancies_dict["vacancies"]
+        for vacancy in vacancies_list:
+            predicted_salary = salary_helpers.predict_rub_salary(
+                currency=vacancy["currency"],
+                salary_from=vacancy["payment_from"],
+                salary_to=vacancy["payment_to"],
+            )
+            if not predicted_salary:
+                continue
+            total_salary += predicted_salary
+            processed_count += 1
+        if total_count:
             continue
-        total_salary += predicted_salary
-        count += 1
-    avg_salary = int(total_salary / count) if count else 0
-    return count, avg_salary
+        total_count = vacancies_dict["count"]
+    avg_salary = int(total_salary / processed_count) if processed_count else 0
+    return total_count, processed_count, avg_salary
